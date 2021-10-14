@@ -1,0 +1,9 @@
+.itemAddForm {
+  margin-top: 10px;
+}
+
+.itemAddForm input .newToDoLabel{
+  width: auto;
+  flex-grow: 1;
+  margin-right: 3px;
+}

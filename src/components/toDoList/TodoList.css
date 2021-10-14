@@ -1,0 +1,9 @@
+.toDoList .listGroupItem {
+  padding: .25rem .75rem;
+}
+
+.emptyToDo {
+  margin: 0 0 0 40%;
+  font-size: 25px;
+  color: red;
+}
