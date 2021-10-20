@@ -1,10 +1,32 @@
+image: node:6.9.4
+
 pipelines:
-  branches:
-    main:
-      - step:
-          name: Build and test the app
-          image: node:latest
-          script:
-            - npm install
-            - npm run test
-            - npm run build
+  default:
+    - step:
+        name: Install dependencies
+        caches:
+          - node
+        script:
+          - npm install
+    - step:
+        name: Test and build
+        caches:
+          - node
+        script:
+          - npm test
+          - npm run build
+        artifacts:
+          - build/**
+    - step:
+        # set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY as environment variables
+        name: Deploy to S3
+        deployment: test   # set to test, staging or production
+        # trigger: manual  # uncomment to have a manual step
+        image: atlassian/pipelines-awscli
+        script:
+          - aws s3 sync --delete ./build s3://$S3_BUCKET_UI
+          - aws s3 cp --cache-control max-age=0 ./build/service-worker.js s3://$S3_BUCKET_UI
+    - step:
+        name: Invalidate cache
+        script:
+          - aws cloudfront create-invalidation --distribution-id $CF_DISTRIBUTION_ID --paths /*
