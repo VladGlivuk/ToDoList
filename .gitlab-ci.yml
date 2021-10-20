@@ -1,10 +1,36 @@
-pages:
-  image: alpine:latest
-  stage: deploy
-  variables:
-    GIT_STRATEGY: none
+image: node
+
+build:
+  stage: build
+  cache:
+    paths:
+      - node_modules/
   script:
-    - mv build public         
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - build
+
+test:
+  stage: test
+  cache:
+    paths:
+      - node_modules/
+    policy: pull
+  script:
+    - npm run test
+
+pages:
+  stage: deploy
+  dependencies: 
+    - build
+  script:
+    - rm -rf public
+    - cp build/index.html build/404.html
+    - mv build public
   artifacts:
     paths:
       - public
+  only:
+    - main
