@@ -1,5 +1,21 @@
-demo_job1:
-  tags:
-    - ci
+stages:
+  - build
+  - test
+
+build:
+  stage: build
+  image: node
+  script: 
+    - echo "Start building App"
+    - npm install
+    - npm build
+    - echo "Build successfully!"
+
+test:
+  stage: test
+  image: node
   script:
-    - echo Hello World
+    - echo "Testing App"
+    - npm install
+    - CI=true npm test
+    - echo "Test successfully!"
