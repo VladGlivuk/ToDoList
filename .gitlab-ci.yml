@@ -1,11 +1,26 @@
-pages:
-  stage: deploy
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  cache:
+    paths:
+      - node_modules/
   script:
-  - mkdir .public
-  - cp -r * .public
-  - mv .public public
+    - npm install
+    - npm run build
   artifacts:
     paths:
-    - public
-  only:
-  - main
+      - build
+
+pages:
+  image: alpine:latest
+  stage: deploy
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - mv build public         
+  artifacts:
+    paths:
+      - public
