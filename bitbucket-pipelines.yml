@@ -28,7 +28,7 @@ pipelines:
                 AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
                 AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
                 AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
-                S3_BUCKET: $STAGING_BUCKET_NAME
+                S3_BUCKET: $S3_BUCKET
                 ACL: "public-read"
                 LOCAL_PATH: "build"
       - step:
@@ -39,7 +39,7 @@ pipelines:
                 AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
                 AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
                 AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
-                DISTRIBUTION_ID: $STAGING_DISTRIBUTION_ID
+                DISTRIBUTION_ID: $DISTRIBUTION_ID
     production:
       - step:
           name: Installing & Running Tests
@@ -63,10 +63,10 @@ pipelines:
           script:
             - pipe: atlassian/aws-s3-deploy:0.2.4
               variables:
-                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_ACCESSPRODUCTION_DISTRIBUTION_ID_KEY_ID: $AWS_ACCESS_KEY_ID
                 AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
                 AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
-                S3_BUCKET: $PRODUCTION_BUCKET_NAME
+                S3_BUCKET: $S3_BUCKET
                 ACL: "public-read"
                 LOCAL_PATH: "build"
       - step:
@@ -77,7 +77,7 @@ pipelines:
                 AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
                 AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
                 AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
-                DISTRIBUTION_ID: $PRODUCTION_DISTRIBUTION_ID
+                DISTRIBUTION_ID: $DISTRIBUTION_ID
   branches:
     dev:
       - step:
