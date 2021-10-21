@@ -21,4 +21,4 @@ pipelines:
               ACL: 'public-read'
               S3_BUCKET: $S3_BUCKET
               LOCAL_PATH: "artifact"
-              EXTRA_ARGS: "--size-only"
+              # EXTRA_ARGS: "--size-only" 
