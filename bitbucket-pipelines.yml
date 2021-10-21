@@ -5,7 +5,6 @@ pipelines:
     - step:
         name: Build artifact
         script:
-          - npm run build
           - mkdir artifact
           - echo "Pipelines is awesome!" > artifact/index.html
         artifacts:
@@ -19,7 +18,7 @@ pipelines:
               AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
               AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
               AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
-              S3_BUCKET: $S3_BUCKET
-              LOCAL_PATH: "build"
               ACL: 'public-read'
+              S3_BUCKET: $S3_BUCKET
+              LOCAL_PATH: "artifact"
               EXTRA_ARGS: "--size-only"
