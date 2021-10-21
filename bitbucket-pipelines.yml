@@ -6,7 +6,6 @@ pipelines:
         name: Build artifact
         script:
           - mkdir artifact
-          - echo "Pipelines is awesome!" > artifact/index.html
         artifacts:
           - artifact/*
     - step:
