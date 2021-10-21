@@ -1,7 +1,7 @@
 image: node:10.15.3
 
 pipelines:
-  custom: # Pipelines that can only be triggered manually
+  custom: 
     staging:
       - step:
           name: Installing & Running Tests
