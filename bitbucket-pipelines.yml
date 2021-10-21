@@ -23,7 +23,7 @@ pipelines:
           name: Deploy to S3
           deployment: staging
           script:
-            - pipe: atlassian/aws-s3-deploy:0.2.4
+            - pipe: atlassian/aws-s3-deploy:latest
               variables:
                 AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
                 AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
@@ -61,7 +61,7 @@ pipelines:
           name: Deploy to S3
           deployment: production
           script:
-            - pipe: atlassian/aws-s3-deploy:0.2.4
+            - pipe: atlassian/aws-s3-deploy:latest
               variables:
                 AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
                 AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
