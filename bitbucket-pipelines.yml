@@ -3,6 +3,13 @@ image: atlassian/default-image:2
 pipelines:
   default:
     - step:
+        name: Build artifact
+        script:
+          - mkdir artifact
+          - echo "Pipelines is awesome!" > artifact/index.html
+        artifacts:
+          - artifact/*
+    - step:
         name: Deploy to S3
         deployment: production
         script:
@@ -12,6 +19,6 @@ pipelines:
               AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
               AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
               S3_BUCKET: $S3_BUCKET
-              LOCAL_PATH: $LOCAL_PATH
+              LOCAL_PATH: "build"
               ACL: 'public-read'
               EXTRA_ARGS: "--size-only"
