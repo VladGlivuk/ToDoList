@@ -5,6 +5,7 @@ pipelines:
     - step:
         name: Build artifact
         script:
+          - npm run build
           - mkdir artifact
           - echo "Pipelines is awesome!" > artifact/index.html
         artifacts:
