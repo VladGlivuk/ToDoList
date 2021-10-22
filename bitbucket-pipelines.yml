@@ -1,56 +1,32 @@
 image: node:10.15.3
-    
+
 pipelines:
-  default:
-    - parallel:
-      - step:
-          name: Build and Test
-          caches:
-            - node
-          script:
-            - npm install
-            - npm test
-      - step:
-          name: Lint the node package
-          script:
-            - npm install eslint
-            - npx eslint src
-          caches:
-            - node
   branches:
-    main:
-      - parallel:
-        - step:
-            name: Build and Test
-            caches:
-              - node
-            script:
-              - npm install
-              - npm test
-              - npm run build
-            artifacts:
-              - build/**
-        - step:
-            name: Security Scan
-            script:
-              - pipe: atlassian/git-secrets-scan:0.4.3
+    master:
       - step:
-          name: Deploy to Production
-          deployment: Production
-          trigger: manual
-          clone:
-            enabled: false
+          name: Test App
+          caches:
+            - node
           script:
-            - pipe: atlassian/aws-s3-deploy:0.4.4
-              variables:
-                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
-                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
-                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
-                S3_BUCKET: $S3_BUCKET
-                LOCAL_PATH: 'build'
-            - pipe: atlassian/aws-cloudfront-invalidate:0.1.1
-              variables:
-                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
-                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
-                AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
-                DISTRIBUTION_ID: $DISTRIBUTION_ID
+            - rm -rf package-lock.json
+            - rm -rf node_modules
+            - npm install
+            - npm run test
+      - step:
+           name: Create artifact
+           script: 
+             - git archive --format=tar.gz master -o application.tar.gz 
+           artifacts: 
+              - application.tar.gz
+      - step:
+           name: Deploy to heroku
+           deployment: production
+           caches:
+             - node
+           script:
+             - pipe: atlassian/heroku-deploy:1.1.4
+               variables:
+                 HEROKU_API_KEY: $HEROKU_API_KEY
+                 HEROKU_APP_NAME: $HEROKU_APP_NAME
+                 ZIP_FILE: "application.tar.gz"
+                 WAIT: 'true'
