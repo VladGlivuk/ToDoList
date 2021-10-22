@@ -1,7 +1,5 @@
 image: node:10.15.3
 
-# Workflow Configuration
-
 pipelines:
   default:
     - parallel:
@@ -11,12 +9,10 @@ pipelines:
             - node
           script:
             - npm install
-            # CI=true in default variables for Bitbucket Pipelines https://support.atlassian.com/bitbucket-cloud/docs/variables-in-pipelines/
             - npm test
       - step:
           name: Lint the node package
           script:
-            # Run your linter of choice here
             - npm install eslint
             - npx eslint src
           caches:
@@ -30,7 +26,6 @@ pipelines:
               - node
             script:
               - npm install
-              # CI=true in default variables for Bitbucket Pipelines https://support.atlassian.com/bitbucket-cloud/docs/variables-in-pipelines/
               - npm test
               - npm run build
             artifacts:
@@ -38,8 +33,6 @@ pipelines:
         - step:
             name: Security Scan
             script:
-              # Run a security scan for sensitive data.
-              # See more security tools at https://bitbucket.org/product/features/pipelines/integrations?&category=security
               - pipe: atlassian/git-secrets-scan:0.4.3
       - step:
           name: Deploy to Production
@@ -48,18 +41,16 @@ pipelines:
           clone:
             enabled: false
           script:
-            # sync your files to S3
             - pipe: atlassian/aws-s3-deploy:0.4.4
               variables:
                 AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
                 AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
                 AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
-                S3_BUCKET: 'pipelines-example-ui'
+                S3_BUCKET: $S3_BUCKET
                 LOCAL_PATH: 'build'
-            # triggering a distribution invalidation to refresh the CDN caches
             - pipe: atlassian/aws-cloudfront-invalidate:0.1.1
               variables:
                 AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
                 AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
                 AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
-                DISTRIBUTION_ID: 'E1EFOLTHS1BH8F'
+                DISTRIBUTION_ID: $DISTRIBUTION_ID
